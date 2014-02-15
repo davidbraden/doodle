@@ -1,0 +1,34 @@
+#canvas {
+    border: solid 1px #000;
+    cursor: url(pencil.cur), auto
+}
+
+#canvas.eraser {
+    cursor: url(eraser.cur), auto
+}
+#canvas.pencil {
+    cursor: url(pencil.cur), auto
+}
+
+#toolbar {
+    padding: 10px;
+    margin-left: 600px;
+}
+
+#toolbar button {
+    margin-right: 10px
+}
+
+#pencil {
+    background-image: url(pencil.cur);
+    background-color: transparent;
+    width: 32px;
+    height: 32px;
+}
+
+#eraser {
+    background-image: url(eraser.cur);
+    background-color: transparent;
+    width: 32px;
+    height: 32px;
+}
