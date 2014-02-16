@@ -4,28 +4,42 @@ $(document).ready(function() {
 
 
     var xLast, yLast, drawOn = false;
-
-    canvasElem.mousedown(function(e) {
-        drawOn = true;
-        xLast = getXPosition(e);
-        yLast = getYPosition(e);
-    });
-
-    canvasElem.mouseup(function(e) {
-        drawOn = false;
-    });
-
-    canvasElem.mousemove(function(e) {
-        if (drawOn) {
-            draw(xLast, yLast, getXPosition(e), getYPosition(e));
-        }
-        xLast = getXPosition(e);
-        yLast = getYPosition(e);
-    });
-
-    function toggleDraw() {
-        drawOn = !drawOn;
-    }
+	
+	var isTouchDevice = 'ontouchstart' in document.documentElement;
+	
+	if (isTouchDevice) {
+		canvasElem.bind('touchstart', function(e) {
+			e.preventDefault();
+			drawOn = true;
+			xLast = getXPosition(e.originalEvent.touches[0]);
+			yLast = getYPosition(e.originalEvent.touches[0]);
+		});
+		canvasElem.bind('touchend', function(e) {
+			e.preventDefault();
+			drawOn = false;
+		});
+		canvasElem.bind('touchmove', function(e) {
+			e.preventDefault();
+			draw(xLast, yLast, getXPosition(e.originalEvent.touches[0]), getYPosition(e.originalEvent.touches[0]));
+		});
+	
+	} else {
+		canvasElem.mousedown(function(e) {
+			drawOn = true;
+			updatePosition(e);
+		});
+		canvasElem.mouseup(function(e) {
+			drawOn = false;
+		});
+		canvasElem.mousemove(function(e) {
+			draw(xLast, yLast, getXPosition(e), getYPosition(e));
+		});
+	}
+	
+	function updatePosition(e) {
+		xLast = getXPosition(e);
+		yLast = getYPosition(e);
+	}
 
     function getXPosition(event) {
         return event.pageX - canvasElem.offset().left;
@@ -36,10 +50,14 @@ $(document).ready(function() {
     }
 
     function draw(x1, y1, x2, y2) {
-        context.beginPath();
-        context.moveTo(x1, y1);
-        context.lineTo(x2, y2);
-        context.stroke();
+		if (drawOn) {
+			context.beginPath();
+			context.moveTo(x1, y1);
+			context.lineTo(x2, y2);
+			context.stroke();
+        }
+		xLast = x2;
+		yLast = y2;
     }
 
     function clear() {
